@@ -9,10 +9,9 @@ library(broom)
 
 TT_GOSIF <- fread("D:/0 Work/1 Data analysis/carryover_effect/CarryOver.csv") 
 
-
 ### SOS50_EOS50_SOS50 ----------------------------------------------------
 #### EOS50_SOS50 -------------------------------------------------------
-g2 <- ggplot()+
+g1 <- ggplot()+
   geom_map(data = world, map = world, aes(long, lat, map_id = region),
            color = "transparent", fill = "lightgray", linewidth = 0.1)+
   geom_point(data = TT_GOSIF,aes(Lon, Lat, color = R_EOS50_SOS50),
@@ -38,7 +37,7 @@ g2 <- ggplot()+
   theme(legend.position = c(0.12, 0.28))
 
 #### SOS50_EOS50 -------------------------------------------------------
-g22 <- ggplot()+
+g2 <- ggplot()+
   geom_map(data = world, map = world, aes(long, lat, map_id = region),
            color = "transparent", fill = "lightgray", linewidth = 0.1)+
   geom_point(data = TT_GOSIF,aes(Lon, Lat, color = R_SOS50_EOS50),
@@ -66,8 +65,7 @@ g22 <- ggplot()+
 
 #### EOS50_SOS50 - SOS50_EOS50 ---------------------------------------------------------
 TT_GOSIF$diff1 <- abs(TT_GOSIF$R_EOS50_SOS50)-abs(TT_GOSIF$R_SOS50_EOS50)
-
-g222 <- ggplot()+
+g3 <- ggplot()+
   geom_map(data = world, map = world, aes(long, lat, map_id = region),
            color = "transparent", fill = "lightgray", linewidth = 0.1)+
   geom_point(data = TT_GOSIF,aes(Lon, Lat, color = diff1),
@@ -114,7 +112,7 @@ data_t <- TT_GOSIF %>%
 data_t <- apply(data_t, 2, as.numeric)
 data_t <- as.data.frame(data_t)
 
-g_2 <- ggplot(data_t, aes(x=Lat, y=mean_eos_c)) +
+g_1 <- ggplot(data_t, aes(x=Lat, y=mean_eos_c)) +
   geom_hline(yintercept = 0, linetype = "dashed", linewidth = 1.2, color = "gray")+
   geom_ribbon(aes(ymin = mean_eos_c-sd_eos_c, ymax = mean_eos_c+sd_eos_c), fill = "#FE8602", alpha = 0.3) +
   geom_line(aes(x=Lat, y = mean_eos_c), linewidth = 1.2, color = "darkorange1") +
@@ -135,7 +133,7 @@ g_2 <- ggplot(data_t, aes(x=Lat, y=mean_eos_c)) +
   coord_flip() +
   labs(x = NULL, y = "Effect (days/day)")
 
-g_22 <- ggplot(data_t, aes(Lat,mean_sos_c)) +
+g_2 <- ggplot(data_t, aes(Lat,mean_sos_c)) +
   geom_hline(yintercept = 0, linetype = "dashed", linewidth = 1.2, color = "gray")+
   geom_ribbon(aes(ymin = mean_sos_c - sd_sos_c, ymax = mean_sos_c + sd_sos_c), fill = "#F21A00", alpha = 0.3) +  # 误差区间 for mean2
   geom_line(aes(y = mean_sos_c), linewidth = 1.2, color = "red")+
@@ -155,7 +153,7 @@ g_22 <- ggplot(data_t, aes(Lat,mean_sos_c)) +
   coord_flip() +
   labs(x = NULL, y = "Effect (days/day)")
 
-g_222 <- ggplot(data_t, aes(x=Lat, y=mean_10_c)) +
+g_3 <- ggplot(data_t, aes(x=Lat, y=mean_10_c)) +
   geom_hline(yintercept = 0, linetype = "dashed", linewidth = 1.2, color = "gray")+
   geom_ribbon(aes(ymin = mean_10_c-sd_10_c, ymax = mean_10_c+sd_10_c), fill = "blue", alpha = 0.3) +
   geom_line(aes(x=Lat, y = mean_10_c), linewidth = 1.2, color = "#2F5597") +
@@ -175,12 +173,3 @@ g_222 <- ggplot(data_t, aes(x=Lat, y=mean_10_c)) +
   ggtitle("(f)") +
   coord_flip() +
   labs(x = NULL, y = "Effect difference")
-
-#### output figure --------------------------------------------------
-plot2 <- grid.arrange(g2, g_2, ncol = 2, widths = c(0.8, 0.2))
-plot22 <- grid.arrange(g22, g_22, ncol = 2, widths = c(0.8, 0.2))
-plot222 <- grid.arrange(g222, g_222, ncol = 2, widths = c(0.8, 0.2))
-Fig.2 <- ggarrange (plot2, plot22, plot222, ncol = 1,nrow = 3, common.legend = F,
-                    font.label = list(size = 24,face = "bold",family="sans"))
-ggsave("2 Fig.2d.jpg", width = 15, height = 20)
-ggsave("2 Fig.2d.pdf", width = 15, height = 20)

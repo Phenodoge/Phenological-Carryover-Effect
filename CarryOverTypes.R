@@ -1,5 +1,4 @@
 ### SOS50_EOS50_SOS50 -----------------------------------------------------
-### determine carryover types ----------------------------------------------
 rm(list=ls())
 library(data.table)
 library(tidyverse)
@@ -9,7 +8,7 @@ library(dplyr)
 library(broom)
 library(ggpointdensity)
 
-TT_GOSIF1 <- fread("D:/0 Work/1 Data analysis/carryover_effect/CarryOver.csv")
+TT_GOSIF1 <- fread("D:/0 Work/Work/3 BNU/Lab/2 Manuscripts/MS16 PheCarryover_correct/20250708 NEE appeal/1 Data analysis/0 Code and data preparation/Upload/CarryOver.csv")
 
 phe_type <- TT_GOSIF1 %>%
   dplyr::mutate(
@@ -27,9 +26,6 @@ phe_type <- TT_GOSIF1 %>%
 ##### carryover types -------------------------------------------------
 TT_GOSIF <- phe_type
 ylgn_colors <- c("#46327e", "#3d4e8a", "#31688e", "#277f8e", "#1fa187", "#3fbc73","#5ec962","#fde725","gray65")
-TT_GOSIF$PHE_SOS50_EOS50_SOS50<-factor(TT_GOSIF$PHE_SOS50_EOS50_SOS50,levels=c("++", "+-", "-+",  "--",  "0-", "0+", "-0",  "+0", "00"))
-table(TT_GOSIF$PHE_SOS50_EOS50_SOS50)/dim(TT_GOSIF)[1]* 100
-
 TT_GOSIF <- subset(TT_GOSIF, PHE_SOS50_EOS50_SOS50 != "00")
 TT_GOSIF$PHE_SOS50_EOS50_SOS50<-factor(TT_GOSIF$PHE_SOS50_EOS50_SOS50,levels=c("+0",  "0-",  "0+", "+-", "++",  "-0","--", "-+"))
 
@@ -90,5 +86,4 @@ g2 <- ggplot(TT_GOSIF,aes(x = R_EOS50_SOS50, y = R_SOS50_EOS50))+
 ##### output figure-----------------------------------------------
 Fig.3 <- ggarrange (g1, g2, ncol = 2,nrow = 1, common.legend = F,
                      font.label = list(size = 24,face = "bold",family="sans"))
-
 ggsave("Fig.3.jpg", width = 15, height = 7.5)
